@@ -1,0 +1,126 @@
+name: Jekyll build & validate
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.1'
+
+      - name: Install dependencies
+        run: |
+          gem install bundler --conservative
+          bundle config set path vendor/bundle
+          bundle install --jobs 4 --retry 3
+
+      - name: Build site with Jekyll
+        run: bundle exec jekyll build --trace
+
+      - name: Upload site artifact for PR preview
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-preview
+          path: _site
+
+      - name: Install markdownlint-cli
+        run: |
+          curl -sL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+          sudo apt-get install -y nodejs
+          npm install -g markdownlint-cli@0.35.0
+
+      - name: Run markdownlint
+        run: |
+          markdownlint "**/*.md" --config .markdownlint.yml
+
+      - name: Validate robots.txt contains site.url
+        run: |
+          set -e
+          URL=$(ruby -ryaml -e "puts YAML.load_file('_config.yml')['url']")
+          if [ -z "$URL" ]; then
+            echo "Warning: 'url' is empty in _config.yml"; exit 1
+          fi
+          if ! grep -q "$URL" _site/robots.txt; then
+            echo "_site/robots.txt does not contain $URL"; exit 1
+          fi
+
+      - name: Validate sitemap.xml contains site.url
+        run: |
+          set -e
+          URL=$(ruby -ryaml -e "puts YAML.load_file('_config.yml')['url']")
+          if ! grep -q "$URL" _site/sitemap.xml; then
+            echo "_site/sitemap.xml does not contain $URL"; exit 1
+          fi
+
+  preview:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Download site artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: site-preview
+
+      - name: Checkout gh-pages branch
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          persist-credentials: true
+
+      - name: Copy preview into gh-pages
+        run: |
+          PR_NUM=${{ github.event.number }}
+          mkdir -p preview/pr-${PR_NUM}
+          rm -rf preview/pr-${PR_NUM}/* || true
+          cp -r _site/* preview/pr-${PR_NUM}/
+          git add preview/pr-${PR_NUM}
+          git commit -m "Add preview for PR #${PR_NUM} [ci skip]" || echo "No changes to commit"
+          git push origin gh-pages
+
+      - name: Comment PR with preview URL
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const pr = context.payload.pull_request.number
+            const repo = context.repo.repo
+            const owner = context.repo.owner
+            const url = `https://${owner}.github.io/${repo}/preview/pr-${pr}/`
+            github.issues.createComment({ owner, repo, issue_number: pr, body: `Preview available at: ${url}` })
+
+      - name: Cleanup old previews
+        run: |
+          # Remove preview directories older than PREVIEW_RETENTION_DAYS (default 7)
+          RETENTION_DAYS=${{ env.PREVIEW_RETENTION_DAYS || '7' }}
+          echo "Preview retention set to ${RETENTION_DAYS} days"
+          NOW=$(date +%s)
+          for d in preview/pr-*; do
+            [ -d "$d" ] || continue
+            # Try to get last git commit timestamp touching this path
+            LAST_COMMIT_TS=$(git log -1 --format=%ct -- "$d" 2>/dev/null || true)
+            if [ -n "$LAST_COMMIT_TS" ]; then
+              AGE_DAYS=$(( (NOW - LAST_COMMIT_TS) / 86400 ))
+            else
+              # Fallback to directory mtime
+              DIR_MTIME=$(stat -c %Y "$d")
+              AGE_DAYS=$(( (NOW - DIR_MTIME) / 86400 ))
+            fi
+            if [ "$AGE_DAYS" -gt "$RETENTION_DAYS" ]; then
+              echo "Removing old preview: $d (age ${AGE_DAYS} days)"
+              git rm -r --ignore-unmatch "$d" || rm -rf "$d"
+            fi
+          done
+          git commit -m "Cleanup old previews older than ${RETENTION_DAYS} days [ci skip]" || echo "No preview cleanup changes"
+          git push origin gh-pages || echo "Push failed (check branch protection)"

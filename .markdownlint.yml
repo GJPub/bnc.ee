@@ -1,0 +1,12 @@
+# Basic markdownlint configuration
+default: true
+
+# Allow Kramdown attribute lists and inline HTML in controlled places
+MD033: false  # allow inline HTML (turn off globally if you prefer stricter rules)
+
+# Enforce two-space list indentation
+MD007:
+  indent: 2
+
+# Ensure headings are surrounded by blank lines
+MD022: true

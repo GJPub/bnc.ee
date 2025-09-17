@@ -1,10 +1,20 @@
-#theme: jekyll-theme-hacker
+theme: jekyll-theme-hacker
 title: bnc.ee
 future: true
 author: Your Name
 description: A short, compelling description of your website.
 google_analytics: G-BT1N14HW0M
 remote_theme: pages-themes/hacker@v0.2.0
+# Site URL and baseurl for absolute_url/relative_url filters
+url: "https://bnc.ee"
+baseurl: ""
+permalink: /:categories/:title/
+#header_pages: true
+header_pages: 
+  - index.md
+  - about.md
+  - projects.md
+  - blog.md
 plugins:
 - jekyll-remote-theme
 - jekyll-feed
@@ -15,11 +25,13 @@ navigation:
   - title: Home
     url: /
   - title: About
-    url: /about.html
+    url: /about/
   - title: Projects
-    url: /projects.html
+    url: /projects/
   - title: Blog
-    url: /blog.html
+    url: /blog/
+  - title: Search
+    url: /search/
 
 social:
   github: your-github-username
@@ -28,3 +40,5 @@ social:
 
 sass:
   load_paths: ["_sass"]
+include:
+  - _redirects

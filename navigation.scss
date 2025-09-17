@@ -5,27 +5,37 @@ header {
   text-align: center;
 }
 
-nav {
+nav[aria-label="Main navigation"] {
   display: flex;
   justify-content: center;
-  gap: 2rem;
-  border: 1px solid #39FF14;
-  padding: 0.5rem 1rem;
+  margin-bottom: 1rem;
 }
 
-nav a {
-  color: #39FF14; // Hacker theme green
+.main-nav {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.main-nav li {
+  display: flex;
+}
+
+.main-nav a {
+  color: #39FF14;
   text-decoration: none;
   font-size: 1.1rem;
-  transition: color 0.3s ease;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: background 0.2s, color 0.3s;
 }
 
-nav a:hover {
+.main-nav a:hover,
+.main-nav a.active,
+.main-nav a[aria-current="page"] {
   color: #fff;
-  text-decoration: underline;
-}
-
-nav a.active {
-  font-weight: bold;
+  background: #39FF14;
   text-decoration: underline;
 }

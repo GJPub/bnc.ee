@@ -15,6 +15,11 @@ gem "webrick", "~> 1.7"
 gem "jekyll-sitemap"
 gem "jekyll-archives"
 gem "jekyll-paginate"
+gem "faraday-retry"
+gem "jekyll-theme-hacker"
+gem "jekyll-navigation"
+
+# Additional Jekyll plugins
 gem "jekyll-compose", group: :jekyll_plugins
 gem "jekyll-include-cache", group: :jekyll_plugins
 gem "jekyll-optional-front-matter", group: :jekyll_plugins
@@ -28,8 +33,3 @@ gem "jekyll-titles-from-headings", group: :jekyll_plugins
 gem "jekyll-admin", group: :jekyll_plugins
 gem "liquid-tag-parser", "~> 1.8.0"
 gem "jekyll-lunr-js-search", group: :jekyll_plugins
-gem "jekyll-redirect-from", group: :jekyll_plugins
-gem "jekyll-seo-tag", group: :jekyll_plugins
-gem "jekyll-sitemap", group: :jekyll_plugins
-gem "jekyll-feed", group: :jekyll_plugins
-gem "faraday-retry"

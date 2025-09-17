@@ -1,12 +1,21 @@
 ---
 layout: default
 title: Projects
+permalink: /projects/
+redirect_from:
+  - /projects.html
+tags: projects
 ---
+
 
 ## My Projects
 
-Here is a list of projects I am working on.
+{:.projects-list}
 
-### rsk.ee
+- ### rsk.ee
 
-`rsk.ee` is a simple web service that identifies and displays the source IP address of the connecting client. It is built as a lightweight, serverless application running on Google Cloud Functions (GCP). You can visit the service here: <https://rsk.ee>.
+  A simple web service that identifies and displays the source IP address of the connecting client. Built as a lightweight, serverless application running on Google Cloud Functions (GCP).
+
+  [Visit rsk.ee](https://rsk.ee){:target="_blank" rel="noopener"}
+
+<!-- Add more projects below as needed -->

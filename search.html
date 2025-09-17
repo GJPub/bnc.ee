@@ -1,0 +1,45 @@
+---
+layout: default
+title: Search
+permalink: /search/
+---
+
+<h1>Search</h1>
+<p>Type to search posts (client-side).</p>
+<input id="search-input" type="search" placeholder="Search posts..." aria-label="Search posts">
+<ul id="search-results"></ul>
+
+<script>
+  async function loadIndex() {
+    const res = await fetch('{{ "/search.json" | relative_url }}');
+    return res.json();
+  }
+
+  function renderResults(results) {
+    const ul = document.getElementById('search-results');
+    ul.innerHTML = '';
+    if (!results.length) {
+      ul.innerHTML = '<li>No results</li>';
+      return;
+    }
+    results.forEach(post => {
+      const li = document.createElement('li');
+      li.innerHTML = `<a href="${post.url}">${post.title}</a> <span class="post-meta">${post.date}</span>`;
+      ul.appendChild(li);
+    });
+  }
+
+  (async () => {
+    const index = await loadIndex();
+    const input = document.getElementById('search-input');
+    input.addEventListener('input', () => {
+      const q = input.value.trim().toLowerCase();
+      if (!q) {
+        renderResults([]);
+        return;
+      }
+      const results = index.filter(p => (p.title + ' ' + p.content).toLowerCase().includes(q));
+      renderResults(results);
+    });
+  })();
+</script>

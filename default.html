@@ -8,17 +8,22 @@
     {% seo %}
   </head>
   <body class="hacker">
+    <a class="skip-link" href="#main-content">Skip to content</a>
     <div class="container">
       <header>
-        <nav>
-          {% for item in site.navigation %}
-            <a href="{{ item.url | relative_url }}" {% if page.url == item.url %}class="active"{% endif %}>
-              {{ item.title }}
-            </a>
-          {% endfor %}
+        <nav aria-label="Main navigation">
+          <ul class="main-nav">
+            {% for item in site.navigation %}
+              <li>
+                <a href="{{ item.url | relative_url }}" {% if page.url == item.url %}class="active" aria-current="page"{% endif %}>{{ item.title }}</a>
+              </li>
+            {% endfor %}
+          </ul>
         </nav>
       </header>
-      <main>
+      <main id="main-content">
+        {% include nav.html nav=page.nav %} 
+
         {{ content }}
       </main>
     </div>

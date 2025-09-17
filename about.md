@@ -1,6 +1,9 @@
 ---
 layout: default
 title: About
+permalink: /about/
+redirect_from:
+  - /about.html
 ---
 
 ## About Me

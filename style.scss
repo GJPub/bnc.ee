@@ -1,0 +1,144 @@
+/* Modern Base Styles */
+body {
+	background: #111;
+	color: #eee;
+	font-family: 'Fira Mono', 'Menlo', 'Monaco', 'Consolas', monospace;
+	margin: 0;
+	padding: 0;
+}
+
+.container {
+	max-width: 900px;
+	margin: 0 auto;
+	padding: 2rem;
+	background: #181818;
+	border-radius: 10px;
+	box-shadow: 0 2px 16px rgba(57,255,20,0.05);
+}
+
+h1, h2, h3, h4, h5, h6 {
+	color: #39FF14;
+	font-weight: bold;
+}
+
+a {
+	color: #39FF14;
+	text-decoration: underline;
+	transition: color 0.2s;
+}
+a:hover {
+	color: #fff;
+}
+
+ul, ol {
+	padding-left: 1.5rem;
+}
+
+.post-list-heading {
+	margin-top: 2rem;
+}
+
+.post-list {
+	list-style: none;
+	padding: 0;
+}
+.post-list li {
+	margin-bottom: 2rem;
+	padding-bottom: 1rem;
+	border-bottom: 1px solid #222;
+}
+.post-meta {
+	color: #aaa;
+	font-size: 0.95rem;
+}
+
+/* Skip link accessible styles */
+.skip-link {
+	position: absolute;
+	left: -999px;
+	top: -999px;
+	background: #39FF14;
+	color: #000;
+	padding: 0.5rem 1rem;
+	z-index: 1000;
+}
+.skip-link:focus {
+	left: 1rem;
+	top: 1rem;
+}
+/* Project Cards Styles */
+.projects-list {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 2rem;
+	margin: 2rem 0;
+}
+.projects-list > li {
+	background: #222;
+	border: 1px solid #39FF14;
+	border-radius: 8px;
+	padding: 1.5rem;
+	min-width: 250px;
+	max-width: 350px;
+	box-shadow: 0 2px 8px rgba(57,255,20,0.1);
+}
+.projects-list > li h3 {
+	color: #39FF14;
+	margin-top: 0;
+}
+.projects-list > li p {
+	color: #eee;
+}
+.projects-list > li a {
+	color: #39FF14;
+	text-decoration: underline;
+	font-weight: bold;
+	transition: color 0.2s;
+}
+.projects-list > li a:hover {
+	color: #fff;
+}
+.project-card {
+	background: #222;
+	border: 1px solid #39FF14;
+	border-radius: 8px;
+	padding: 1.5rem;
+	min-width: 250px;
+	max-width: 350px;
+	box-shadow: 0 2px 8px rgba(57,255,20,0.1);
+}
+.project-card h3 {
+	color: #39FF14;
+	margin-top: 0;
+}
+.project-card p {
+	color: #eee;
+}
+.project-card a {
+	color: #39FF14;
+	text-decoration: underline;
+	font-weight: bold;
+	transition: color 0.2s;
+}
+.project-card a:hover {
+	color: #fff;
+}
+
+/* 404 Error Page Styles */
+.error-page {
+	text-align: center;
+	margin: 4rem auto;
+}
+.error-page h1 {
+	font-size: 5rem;
+	color: #39FF14;
+}
+.error-page p {
+	font-size: 1.5rem;
+	margin-bottom: 2rem;
+}
+.error-page a {
+	color: #39FF14;
+	text-decoration: underline;
+	font-size: 1.2rem;
+}
