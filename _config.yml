@@ -10,8 +10,13 @@ navigation:
     url: /
   - title: Projects
     url: /projects.html
+  - title: Blog
+    url: /blog.html
 
 social:
   github: your-github-username
   twitter: your-twitter-username
   linkedin: your-linkedin-username
+
+sass:
+  load_paths: ["_sass"]
