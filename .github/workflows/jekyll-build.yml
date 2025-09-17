@@ -18,11 +18,74 @@ jobs:
         with:
           ruby-version: '3.1'
 
+      - name: Cache Ruby gems
+        uses: actions/cache@v4
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}-ruby-${{ matrix.ruby || '3.1' }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
+
       - name: Install dependencies
         run: |
           gem install bundler --conservative
           bundle config set path vendor/bundle
           bundle install --jobs 4 --retry 3
+
+      - name: Install system packages for image processing (libvips preferred)
+        run: |
+          # Install libvips (preferred) with dev headers; fall back to imagemagick on failure
+          sudo apt-get update
+          set -e
+          echo "Attempting to install libvips..."
+          if sudo apt-get install -y libvips-tools libvips-dev; then
+            echo "libvips installed successfully"
+          else
+            echo "libvips install failed; attempting to install ImageMagick as fallback"
+            sudo apt-get install -y imagemagick
+            echo "ImageMagick installed (fallback)"
+          fi
+
+      - name: Check image tool versions
+        run: |
+          echo "=== vips (if installed) ==="
+          if command -v vips >/dev/null 2>&1; then vips --version || true; else echo "vips not found"; fi
+          echo "=== ImageMagick (convert) ==="
+          if command -v convert >/dev/null 2>&1; then convert --version || true; else echo "convert not found"; fi
+
+      - name: Smoke test: image processing
+        id: smoke
+        run: |
+          set -e
+          SRC=assets/images/og-image.png
+          OUTDIR=assets/images/generated/ci-smoke
+          mkdir -p "$OUTDIR"
+          # If source exists and non-empty use it; otherwise create a tiny 1x1 PNG as fallback
+          if [ -f "$SRC" ] && [ -s "$SRC" ]; then
+            TEST_SRC="$SRC"
+          else
+            TEST_SRC="$OUTDIR/sample.png"
+            echo "Creating tiny fallback PNG for smoke test: $TEST_SRC"
+            echo "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==" | base64 --decode > "$TEST_SRC"
+          fi
+          if command -v vips >/dev/null 2>&1; then
+            echo "Running vips resize smoke test on $TEST_SRC"
+            vips resize "$TEST_SRC" "$OUTDIR/test.jpg" 0.5 || (echo "vips resize failed"; exit 1)
+          elif command -v convert >/dev/null 2>&1; then
+            echo "Running ImageMagick convert smoke test on $TEST_SRC"
+            convert "$TEST_SRC" -resize 50% "$OUTDIR/test.jpg" || (echo "convert resize failed"; exit 1)
+          else
+            echo "No image processing tool available (vips or convert)"; exit 1
+          fi
+          echo "Smoke test image created: $OUTDIR/test.jpg"
+          ls -l "$OUTDIR/test.jpg" || true
+
+      - name: Upload smoke image artifact
+        if: steps.smoke.outcome == 'success' && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-smoke-image
+          path: assets/images/generated/ci-smoke/test.jpg
 
       - name: Build site with Jekyll
         run: bundle exec jekyll build --trace

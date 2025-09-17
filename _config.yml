@@ -9,6 +9,10 @@ remote_theme: pages-themes/hacker@v0.2.0
 url: "https://bnc.ee"
 baseurl: ""
 permalink: /:categories/:title/
+autopages: 
+  enabled: true
+  # Site-enabled: false
+
 #header_pages: true
 header_pages: 
   - index.md
@@ -16,11 +20,14 @@ header_pages:
   - projects.md
   - blog.md
 plugins:
-- jekyll-remote-theme
-- jekyll-feed
-- jekyll-seo-tag
-- jekyll-sitemap
-- jekyll-paginate
+  - jekyll-archives
+  - jekyll-paginate-v2
+  - jekyll-include-cache
+  - jekyll-picture-tag
+  - jekyll-compose
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
 navigation:
   - title: Home
     url: /
@@ -42,3 +49,34 @@ sass:
   load_paths: ["_sass"]
 include:
   - _redirects
+
+# jekyll-archives example config
+jekyll-archives:
+  enabled:
+    - categories
+    - tags
+  layouts:
+    category: archive
+    tag: archive
+  permalinks:
+    category: /category/:name/
+    tag: /tag/:name/
+
+# jekyll-paginate-v2 example config
+pagination:
+  enabled: true
+  per_page: 5
+  permalink: /blog/:num/
+  title: ':title - page :num'
+
+# jekyll-picture-tag example config: responsive image presets
+picture:
+  source: assets/images
+  output: assets/images/generated
+  presets:
+    default:
+      widths: [320, 640, 960, 1280]
+      formats: [webp, jpeg]
+      attributes:
+        loading: lazy
+        decoding: async

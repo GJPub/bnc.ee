@@ -1,3 +1,18 @@
+{%- comment -%}
+nav.html include
+Accepts optional `nav` variable; fallback to `page.nav` or `site.navigation`.
+{%- endcomment -%}
+
+{%- assign nav_items = nav | default: page.nav -%}
+{% if nav_items %}
+  <nav class="sub-nav">
+    <ul>
+      {% for item in nav_items %}
+        <li><a href="{{ item.url | relative_url }}">{{ item.title }}</a></li>
+      {% endfor %}
+    </ul>
+  </nav>
+{% endif %}
 <ul>
     {% for item in include.nav %}
     <li><a href="{{ item.url }}">{{ item.title }}</a>

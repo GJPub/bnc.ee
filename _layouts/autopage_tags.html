@@ -1,0 +1,15 @@
+---
+layout: default
+---
+<main class="autopage tags">
+  <h1>{{ page.title | default: 'Tags' }}</h1>
+  {% if page.items and page.items.size > 0 %}
+    <ul>
+      {% for item in page.items %}
+        <li><a href="{{ item.url | relative_url }}">{{ item.title }}</a></li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No tagged items found.</p>
+  {% endif %}
+</main>
