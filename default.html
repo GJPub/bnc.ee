@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="{{ page.lang | default: site.lang | default: "en" }}">
+
+  {%- include head.html -%}
+
+  <body>
+
+    <header class="site-header">
+      <div class="wrapper">
+        <a class="site-title" rel="author" href="{{ "/" | relative_url }}">{{ site.title | escape }}</a>
+        <nav class="site-nav">
+          <a href="{{ "/" | relative_url }}">Home</a>
+          <a href="{{ "/projects.html" | relative_url }}">Projects</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="page-content" aria-label="Content">
+      {{ content }}
+    </main>
+  </body>
+</html>
