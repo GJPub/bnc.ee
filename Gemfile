@@ -26,7 +26,7 @@ gem "jekyll-sass-converter", group: :jekyll_plugins
 gem "jekyll-textile-converter", group: :jekyll_plugins
 gem "jekyll-titles-from-headings", group: :jekyll_plugins
 gem "jekyll-admin", group: :jekyll_plugins
-gem "jekyll-assets", group: :jekyll_plugins
+gem "liquid-tag-parser", "~> 1.8.0"
 gem "jekyll-lunr-js-search", group: :jekyll_plugins
 gem "jekyll-redirect-from", group: :jekyll_plugins
 gem "jekyll-seo-tag", group: :jekyll_plugins
