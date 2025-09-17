@@ -2,3 +2,9 @@ theme: jekyll-theme-hacker
 title: bnc.ee
 author: Your Name
 description: A short, compelling description of your website.
+
+navigation:
+  - title: Home
+    url: /
+  - title: Projects
+    url: /projects.html
