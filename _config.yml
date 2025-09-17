@@ -10,3 +10,8 @@ navigation:
     url: /
   - title: Projects
     url: /projects.html
+
+social:
+  github: your-github-username
+  twitter: your-twitter-username
+  linkedin: your-linkedin-username
